@@ -1,5 +1,6 @@
 <?php
-class commonController extends controller{
+namespace app\home\controllers;
+class Common extends \core\Controller{
   // 构造方法
   public function __construct(){
     

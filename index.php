@@ -1,8 +1,5 @@
 <?php
 
-// 调试模式
-define('APP_DEBUG', true);
-
 // 网站入口路径
 define('ROOT_PATH', dirname( __FILE__ ) . '/');
 

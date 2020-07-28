@@ -1,5 +1,8 @@
 <?php
-class model {
+namespace core;
+include_once INC_PATH . 'library/MysqliDb.php';
+
+class Model {
   public $db = null;
   public function __construct(){
     $this->conn(); // 连接数据库
@@ -10,8 +13,7 @@ class model {
         return $this->db;
     }
     try {
-        include_once INC_PATH . 'library/mysql.class.php';
-        $res = new MysqliDb (Array (
+        $res = new \library\MysqliDb (Array (
               'host' => DB_HOST,
               'username' => DB_USER,
               'password' => DB_PASSWORD,

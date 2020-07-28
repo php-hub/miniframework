@@ -1,5 +1,6 @@
 <?php
 $route_rules = [
-  ['category/:id' => 'index/demo'],
-  ['page/:id' => 'page/index'],
+  ['demo' => 'home/index/demo'],
+  ['test' => 'home/index/test'],
+  ['myhome/mypage' => 'home/index/index'],
 ];

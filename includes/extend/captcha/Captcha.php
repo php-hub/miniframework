@@ -1,6 +1,8 @@
 <?php
+namespace extend\Captcha;
+
 //验证码类
-class ValidateCode {
+class Captcha {
  private $charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';//随机因子
  private $code;//验证码
  private $codelen = 5;//验证码长度
@@ -11,8 +13,8 @@ class ValidateCode {
  private $fontsize = 20;//指定字体大小
  private $fontcolor;//指定字体颜色
  //构造方法初始化
- public function __construct($font_path) {
-  $this->font = $font_path . 'font/Elephant.ttf'; //注意字体路径要写对，否则显示不了图片
+ public function __construct($font) {
+  $this->font = $font; //注意字体路径要写对，否则显示不了图片
  }
  //生成随机码
  private function createCode() {

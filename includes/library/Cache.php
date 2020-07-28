@@ -1,9 +1,9 @@
 <?php
-
+namespace library;
 /**
  * 文件类型缓存类
  */
-class cache {
+class Cache {
 
     /**
      * 架构函数

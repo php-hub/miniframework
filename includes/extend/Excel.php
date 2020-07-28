@@ -1,5 +1,5 @@
 <?php
-
+namespace extend;
 /**
  * Simple excel generating from PHP5
  *
@@ -25,7 +25,7 @@
  * @todo Add option to give out last line as footer (bold text)
  * @todo Add option to write to file
  */
-class Excel_XML
+class Excel
 {
 
 	/**

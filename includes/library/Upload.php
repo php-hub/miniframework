@@ -1,19 +1,21 @@
 <?php
+namespace library;
 /**
  * 上传类
  */
-class UploadFile {
+class Upload {
+    protected $config = [
+      'maxSize'    => 1024*1024*10, // 上传文件的最大值，默认10M
+      'allowExts'  => ["jpg","jpeg","gif","png"], //允许的文件后缀
+      'savePath'   => '',   //上传文件保存路径
+    ];
+    public $uploadFileInfo; //上传成功的文件信息
+    public $errorMsg; //错误信息
 
-    public $maxSize; // 上传文件的最大值，默认10M
-    public $allowExts; //允许的文件后缀
-    public $savePath; // 上传文件保存路径
-    protected $uploadFileInfo; //上传成功的文件信息
-    protected $errorMsg; //错误信息
-
-    public function __construct($savePath = '', $allowExts = '', $maxSize = '') {
-        $this->savePath = $savePath;
-        $this->allowExts = $allowExts;
-        $this->maxSize = $maxSize;
+    public function __construct($config) {
+      if (is_array($config)) {
+        $this->config = array_merge($this->config, $config);
+      }
     }
 
     /**
@@ -46,10 +48,10 @@ class UploadFile {
 
 		//上传成功
     $date_folder = date("ymd");
-		$this->savePath = $this->savePath . $date_folder;
+		$this->config["savePath"] = $this->config["savePath"] . $date_folder;
 		$file_name = date("His") . rand(10000, 99999) . '.' . $file['extension'];
 
-		$ret = $this->localSave($file['tmp_name'], $this->savePath. '/' . $file_name);
+		$ret = $this->localSave($file['tmp_name'], $this->config["savePath"]. '/' . $file_name);
 		if($ret) {
       $this->uploadFileInfo = $date_folder . '/' . $file_name;
       return true;
@@ -119,18 +121,18 @@ class UploadFile {
             $this->errorMsg = '文件上传失败！';
             return false;
         }
-		//检查是否合法上传
+		    //检查是否合法上传
         if (!is_uploaded_file($file['tmp_name'])) {
             $this->errorMsg = '非法上传文件！';
             return false;
         }
         //检查文件类型
-        if (!in_array($file['extension'], $this->allowExts)) {
+        if (!in_array($file['extension'], $this->config["allowExts"])) {
             $this->errorMsg = '上传文件类型不允许！';
             return false;
         }
         //检查文件大小
-        if ($file['size'] > $this->maxSize) {
+        if ($file['size'] > $this->config["maxSize"]) {
             $this->errorMsg = '上传文件大小超出限制！';
             return false;
         }
