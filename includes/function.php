@@ -114,41 +114,6 @@ function is_post(){
 }
 
 
-
-/**
-* 浏览器友好的变量输出
-* @param mixed $var 变量
-* @param boolean $echo 是否输出 默认为True 如果为false 则返回输出字符串
-* @param string $label 标签 默认为空
-* @param boolean $strict 是否严谨 默认为true
-* @return void|string
-*/
-function dump($var, $echo=true, $label=null, $strict=true) {
-   $label = ($label === null) ? '' : rtrim($label) . ' ';
-   if (!$strict) {
-       if (ini_get('html_errors')) {
-           $output = print_r($var, true);
-           $output = '<pre>' . $label . htmlspecialchars($output, ENT_QUOTES) . '</pre>';
-       } else {
-           $output = $label . print_r($var, true);
-       }
-   } else {
-       ob_start();
-       var_dump($var);
-       $output = ob_get_clean();
-       if (!extension_loaded('xdebug')) {
-           $output = preg_replace('/\]\=\>\n(\s+)/m', '] => ', $output);
-           $output = '<pre>' . $label . htmlspecialchars($output, ENT_QUOTES) . '</pre>';
-       }
-   }
-   if ($echo) {
-       echo($output);
-       return null;
-   }else
-       return $output;
-}
-
-
 // 404页面
 // $status 200:页面跟踪, 404:页面不存在
 function trace($msg , $status = 200){
@@ -159,48 +124,6 @@ function trace($msg , $status = 200){
    include_once ROOT_PATH . 'includes/tpl/page_trace.php';
  }
  die();
-}
-
-// return json
-function ajax_return($data){
-  echo json_encode($data);
-  die();
-}
-
-
-// 无限分类 数据转为树型状的数组
-function listTree($data, $idKey = 'id', $pId = 0, $subname = 'list'){
-  $tree = '';
-  foreach($data as $k => $v)
-  {
-    if($v['pid'] == $pId)
-    {        //父亲找到儿子
-      if(isset($v[$idKey])){
-        $v[$subname] = listTree($data, $idKey, $v[$idKey], $subname);
-      }
-
-     $tree[] = $v;
-    }
-  }
-  return $tree;
-}
-
-// 无限分类，下拉框格式
-function treeSelect($list, $idKey = "id", $pid=0, $level=0, $html='&nbsp;&nbsp;&nbsp;&nbsp;'){
-	static $tree = array();
-	foreach($list as $v){
-		if($v['pid'] == $pid){
-			$v['level'] = $level;
-			$v['html'] = str_repeat($html,$level);
-			$tree[] = $v;
-      if(isset($v[$idKey])){
-        treeSelect($list, $idKey, $v[$idKey], $level+1, $html);
-      }
-
-		}
-	}
-  return $tree;
-	unset($tree);
 }
 
 
@@ -252,10 +175,7 @@ function redirect($url){
 // 载入文件
 function import($path){
     $file = str_replace(".","/",$path);
-    $paths = explode('/' , $file);
-    if($paths[0] === '@'){
-        $file = str_replace("@",MODULE_NAME,$file);
-    }
+    $file = str_replace("@",MODULE_NAME,$file);
     $file = APP_PATH . $file.'.php';
     if (file_exists($file)) {
         if (is_file($file)) {
@@ -266,3 +186,58 @@ function import($path){
     }
     
 }
+
+
+/**
+* URL组装 支持不同URL模式
+* @param string $url URL表达式，格式：'[模块/控制器/操作#锚点@域名]?参数1=值1&参数2=值2...'
+* @param string|array $vars 传入的参数，支持数组和字符串
+* @param string $suffix 伪静态后缀，默认为true表示获取配置值
+* @return string
+*/
+function url($url='',$vars='',$suffix = true) {
+    // 解析URL
+    $info   =  parse_url($url);
+    if(isset($info['fragment'])) { // 解析锚点
+        $anchor =   $info['fragment'];
+        if(false !== strpos($anchor,'?')) { // 解析参数
+            list($anchor,$info['query']) = explode('?',$anchor,2);
+        }
+    }
+ 
+    // 解析参数
+    if(is_string($vars)) { // aaa=1&bbb=2 转换成数组
+        parse_str($vars,$vars);
+    }elseif(!is_array($vars)){
+        $vars = array();
+    }
+    if(isset($info['query'])) { // 解析地址里面参数 合并到vars
+        parse_str($info['query'],$params);
+        $vars = array_merge($params,$vars);
+    }
+
+ 
+    if(URL_MODEL == 0) { // 普通模式URL转换
+        $url  =  "index.php?s=" . strtolower(trim($info["path"],"/"));
+        if( !empty($vars) ) {
+            $vars_str = '';
+            foreach($vars as $k=>$v){
+                $vars_str .= "/".$k.'='.$v;
+            }
+            $url .= $vars_str;
+        }
+    }else{ // 静态URL模式
+        $url  =  "/" . strtolower(trim($info["path"],"/"));
+        if(!empty($vars)) {
+            $vars_str = '';
+            foreach($vars as $k=>$v){
+                $vars_str .= $k.'='.$v.'&';
+            }
+            $url .= '.' . URL_HTML_SUFFIX .'?'.rtrim($vars_str,"&");
+        }
+    }
+    if(isset($anchor)){
+        $url  .= '#'.$anchor;
+    }
+    return $url;
+ }

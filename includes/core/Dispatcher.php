@@ -7,9 +7,8 @@ class Dispatcher {
      * URL映射到控制器
     **/
     public function __construct() {
-
       // 普通模式 http://serverName/index.php?s=/应用/控制器/操作/[参数名=参数值...]
-      if( isset($_GET["s"]) && !empty($_GET["s"]) ){
+      if( isset($_GET["s"]) && key($_GET) === 's' ){
         $params   =  explode('/' , $_GET["s"]);
         define('MODULE_NAME',       isset($params[0])?$params[0]:DEFAULT_MODULE );
         define('CONTROLLER_NAME',   isset($params[1])?$params[1]:DEFAULT_CONTROLLER);
@@ -22,6 +21,7 @@ class Dispatcher {
         }
         return;
       }
+
 
       // PATH_INFO模式
       if(IS_CLI){ // CLI模式下
@@ -41,6 +41,7 @@ class Dispatcher {
               }
           }
       }
+
       $_SERVER['PATH_INFO'] = empty($_SERVER['PATH_INFO'])?'':$_SERVER['PATH_INFO'];
       $_SERVER['PATH_INFO'] = trim($_SERVER['PATH_INFO'],'/');
 
@@ -70,7 +71,6 @@ class Dispatcher {
 
       //保证$_REQUEST正常取值
       $_REQUEST = array_merge($_POST,$_GET);
-
     }
 
     // 过滤特殊字符

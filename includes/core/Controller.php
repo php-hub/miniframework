@@ -17,7 +17,7 @@ class Controller {
       extract($this->variables);
       $theme_path = APP_PATH  .'/'. MODULE_NAME . '/view/';
       if(empty($file)){
-        $tpl = $theme_path . CONTROLLER_NAME . "/" . ACTION_NAME . '.php';
+        $tpl = $theme_path . ucfirst(CONTROLLER_NAME) . "/" . ACTION_NAME . '.php';
       }else{
         $tpl = $theme_path . $file . '.php';
       }

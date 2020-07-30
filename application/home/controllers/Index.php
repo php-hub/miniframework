@@ -1,9 +1,9 @@
 <?php
 namespace app\home\controllers;
 
-import('@.controllers.common');
+import('@.controllers.Common');
 use app\home\controllers\Common as mycommon;
-class index extends mycommon{
+class Index extends mycommon{
   
   // 构造方法
   public function __construct(){
@@ -13,8 +13,11 @@ class index extends mycommon{
   // 主页
   public function index(){
     $this->assign("token",'');
+    echo url("demo#step",["id"=>10021,"name"=>"hinson"]);
+    //echo $this->ajaxReturn(["code"=>0,"msg"=>"这里调用了common函数"]);
     $this->render();
   }
+
   // 上传
   public function upload(){
     $this->render();

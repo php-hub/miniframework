@@ -21,10 +21,10 @@ class start {
     session_start();
 
     //载入配置文件
-    include ROOT_PATH  . "/config.php";
+    include ROOT_PATH  . "config.php";
     
     //URL解析、路由和调度
-    include ROOT_PATH . 'includes/core/dispatcher.php';
+    include ROOT_PATH . 'includes/core/Dispatcher.php';
     new dispatcher();
 
     // 加载公用方法
@@ -51,7 +51,7 @@ class start {
 
   // 解析文件路径
   private static function findFile($class){
-    // 路径映射
+    // 命名空间路径映射
     $vendorMap = [
       'app'       => APP_PATH,
       'core'      => INC_PATH.'core',
@@ -68,15 +68,15 @@ class start {
   //路由分发，即实例化对象调用方法
   private static function dispatch() {
     $module_name = MODULE_NAME;
-    $controller_name = CONTROLLER_NAME;
+    $controller_name = ucfirst(CONTROLLER_NAME);
     $action_name = ACTION_NAME;
 
-    //echo '<br/>'.$module_name;
-    //echo '<br/>'.$controller_name;
-    //echo '<br/>'.$action_name;
+    echo '<pre>Module:'.$module_name .'</pre>';
+    echo '<pre>Controller:'.$controller_name.'</pre>';
+    echo '<pre>Action:'.$action_name.'</pre>';
 
     // 载入类文件
-    $classfile = APP_PATH . $module_name . '/controllers' . "/{$controller_name}.php";
+    $classfile = APP_PATH . $module_name . '/controllers' . "/" . $controller_name.".php";
     if(file_exists($classfile)){
       include $classfile;
     }else{
@@ -84,7 +84,7 @@ class start {
     }
 
     //实例化对象 home\controllers
-    $controller = '\\app\\'.$module_name.'\\controllers\\'.$controller_name;
+    $controller = '\\app\\'.$module_name.'\\controllers\\'. $controller_name;
     if(class_exists($controller)){
       $controller = new $controller;
     }else{
