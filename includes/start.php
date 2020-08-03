@@ -21,17 +21,17 @@ class start {
     session_start();
 
     //载入配置文件
-    include ROOT_PATH  . "config.php";
+    include_once ROOT_PATH  . "config.php";
     
     //URL解析、路由和调度
-    include ROOT_PATH . 'includes/core/Dispatcher.php';
+    include_once ROOT_PATH . 'includes/core/Dispatcher.php';
     new dispatcher();
 
     // 加载公用方法
-    include ROOT_PATH . 'includes/function.php';
+    include_once ROOT_PATH . 'includes/function.php';
     // 加载核心类
-    include ROOT_PATH . 'includes/core/Controller.php';
-    include ROOT_PATH . 'includes/core/Model.php';
+    include_once ROOT_PATH . 'includes/core/Controller.php';
+    include_once ROOT_PATH . 'includes/core/Model.php';
   }
 
   //自动载入类
@@ -44,7 +44,7 @@ class start {
       $file = self::findFile($class);
       if (file_exists($file)) {
           if (is_file($file)) {
-            include $file;  // 引入文件
+            include_once $file;  // 引入文件
           }
       }
   }
@@ -55,7 +55,6 @@ class start {
     $vendorMap = [
       'app'       => APP_PATH,
       'core'      => INC_PATH.'core',
-      'library'   => INC_PATH.'library',
       'extend'    => INC_PATH.'extend',
     ];
     $vendor = substr($class, 0, strpos($class, '\\'));                  // 顶级命名空间
@@ -71,14 +70,14 @@ class start {
     $controller_name = ucfirst(CONTROLLER_NAME);
     $action_name = ACTION_NAME;
 
-    echo '<pre>Module:'.$module_name .'</pre>';
-    echo '<pre>Controller:'.$controller_name.'</pre>';
-    echo '<pre>Action:'.$action_name.'</pre>';
+    //echo '<pre>Module:'.$module_name .'</pre>';
+    //echo '<pre>Controller:'.$controller_name.'</pre>';
+    //echo '<pre>Action:'.$action_name.'</pre>';
 
     // 载入类文件
     $classfile = APP_PATH . $module_name . '/controllers' . "/" . $controller_name.".php";
     if(file_exists($classfile)){
-      include $classfile;
+      include_once $classfile;
     }else{
       trace('控制器不存在',404);
     }

@@ -1,5 +1,5 @@
 <?php
-namespace library;
+namespace extend;
 /**
  * 上传类
  */

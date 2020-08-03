@@ -1,5 +1,5 @@
 <?php
-namespace library;
+namespace extend;
 
 /**
  * 本地化调试输出到文件

@@ -1,13 +1,16 @@
 <?php
 namespace app\home\controllers;
+
 class Common extends \core\Controller{
+
+  public $key;
   // 构造方法
-  public function __construct(){
-    
+  protected function __construct(){
+    $this->key = md5("123");
   }
 
   // 返回JSON
-  public function ajaxReturn($data){
+  protected function ajaxReturn($data){
     echo json_encode($data);
   }
 }

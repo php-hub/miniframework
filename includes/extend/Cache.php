@@ -1,5 +1,5 @@
 <?php
-namespace library;
+namespace extend;
 /**
  * 文件类型缓存类
  */

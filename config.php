@@ -7,10 +7,10 @@ if( file_exists("debug.php") ){
 
 // 数据库配置
 if(!defined("DB_HOST"))     define("DB_HOST","127.0.0.1");
-if(!defined("DB_NAME"))     define("DB_NAME","winnie");
+if(!defined("DB_NAME"))     define("DB_NAME","test");
 if(!defined("DB_USER"))     define("DB_USER","root");
-if(!defined("DB_PASSWORD")) define("DB_PASSWORD","");
-if(!defined("DB_PREFIX"))   define("DB_PREFIX","pqsystem_");
+if(!defined("DB_PASSWORD")) define("DB_PASSWORD","root");
+if(!defined("DB_PREFIX"))   define("DB_PREFIX","pq_");
 
 
 // URL访问配置;
