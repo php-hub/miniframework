@@ -20,15 +20,16 @@ class start {
     //开启session
     session_start();
 
-    //载入配置文件
-    include_once ROOT_PATH  . "config.php";
+    // 加载配置文件
+    include_once ROOT_PATH  . "config/config.php";
     
-    //URL解析、路由和调度
+    // URL解析、路由和调度
     include_once ROOT_PATH . 'includes/core/Dispatcher.php';
     new dispatcher();
 
     // 加载公用方法
     include_once ROOT_PATH . 'includes/function.php';
+
     // 加载核心类
     include_once ROOT_PATH . 'includes/core/Controller.php';
     include_once ROOT_PATH . 'includes/core/Model.php';
@@ -79,7 +80,7 @@ class start {
     if(file_exists($classfile)){
       include_once $classfile;
     }else{
-      trace('控制器不存在',404);
+      error('控制器不存在');
     }
 
     //实例化对象 home\controllers
@@ -87,13 +88,13 @@ class start {
     if(class_exists($controller)){
       $controller = new $controller;
     }else{
-      trace('找不到控制器',404);
+      error('找不到控制器');
     }
     //调用方法
     if(method_exists($controller,$action_name)){
       $controller->$action_name();
     }else{
-      trace('找不到方法',404);
+      error('找不到方法');
     }
   }
 }

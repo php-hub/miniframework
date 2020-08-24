@@ -1,7 +1,7 @@
 <?php 
 namespace app\home\model;
-
-class User extends \core\Model{
+use \core\Model;
+class User extends Model{
     public function add($user_name){
         $data["user_name"] = $user_name;
         return $this->db->insert("user", $data);

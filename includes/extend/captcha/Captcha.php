@@ -1,5 +1,5 @@
 <?php
-namespace extend\Captcha;
+namespace extend\captcha;
 
 //验证码类
 class Captcha {

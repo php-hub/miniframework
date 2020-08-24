@@ -1,1 +1,1 @@
-<pre>Home Test</pre>
+<pre><hr/>this is template Home Test</pre>
