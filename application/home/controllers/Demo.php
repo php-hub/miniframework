@@ -1,11 +1,10 @@
 <?php
 namespace app\home\controllers;
-
 use app\home\controllers\Common as commonControllers;
 use app\common\controllers\Table;
 use app\home\model\User as userModel;
 
-class Index extends commonControllers{
+class Demo extends commonControllers{
   
   // 构造方法
   public function __construct(){
@@ -14,12 +13,19 @@ class Index extends commonControllers{
 
   // 主页
   public function index(){
-    echo $this->orderInfo["subject"] ."<br/>";
-    $this->assign("token",'');
-    echo url("demo#step",["id"=>10021,"name"=>"hinson"]);
-    //echo $this->ajaxReturn(["code"=>0,"msg"=>"这里调用了common函数"]);
-    echo "<br/>get id:". input("get.id");
-    $this->render();
+    echo "<hr/>DEBUG<br/>";
+    dump( DEBUG );
+    echo "<hr/>id:<br/>";
+    echo input("get.id");
+    echo "<hr/>name:<br/>";
+    echo input("get.name");
+    echo "<hr/>from:<br/>";
+    echo input("get.from");
+    echo "<hr/>url:<br/>";
+    echo url("home/about/index",["id"=>12,'action'=>"add"]);
+    echo "<hr/>routeUrl:<br/>";
+    echo routeUrl("demo",[12]);
+    //$this->render();
   }
 
   // 验证数据
@@ -40,7 +46,6 @@ class Index extends commonControllers{
 
     $msg = [
       'name.require' => '名称必须',
-      'name.max'     => '名称最多不能超过25个字符',
       'age.require'   => '年龄必须',
       'age.number'  => '年龄必须数字',
       'age.integer'  => '必须整数',
@@ -49,9 +54,11 @@ class Index extends commonControllers{
       'today.alphaNum' => '必须为线字母',
     ];
 
-    $obj = new \core\Validate($rule);
-    dump( $obj->check($data) );
-    dump( $obj->getError() );
+    $obj = new \core\Validate($rule, $msg);
+    if( !$obj->check($data) ){
+      ajaxReturn(["code"=>0, "msg"=>$obj->getError(), "data"=>""]);
+    }
+    
 
   }
 
@@ -82,47 +89,69 @@ class Index extends commonControllers{
   public function add(){
     echo "数据库操作演示：<br/>";
     $userModel = new userModel;
-    if( $userModel->add("彭庆".time()) ){
-      echo "数据插入成功";
+    $data["user_name"] = "彭庆".time();
+    $id = $userModel->add($data);
+    if( $id ){
+      echo "数据插入成功 当前ID;". $id ;
     }else{
-      echo "数据插入失败";
+      echo "数据插入失败:". $userModel->getMsg();
     }
   }
+
+  // 更新数据
+  public function update(){
+    echo "数据库操作演示：<br/>";
+    $userModel = new userModel;
+    $data = ["user_name"=>"hinson"];
+    $res = $userModel->update(3,$data);
+    var_dump($res);
+    if( $res ){
+      echo "数据更新成功";
+    }else{
+      echo "数据更新失败";
+    }
+  } 
 
   // 读数据列表
   public function getlist(){
     echo "数据库操作演示：<br/>";
     $userModel = new userModel;
     $res = $userModel->getList();
-    if( $res ){
-      echo "数据查询成功<hr/>";
-      var_dump($res);
+    if($res){
+      dump($res);
     }else{
-      echo "数据查询失败";
+      dump($res);
     }
+    
   }
   // 读单条数据
   public function getone(){
     echo "数据库操作演示：<br/>";
     $userModel = new userModel;
-    $res = $userModel->getOne(2);
+    $res = $userModel->getOne(100);
     if( $res ){
-      echo "数据查询成功<hr/>";
-      var_dump($res);
+      echo "查询成功<hr/>";
     }else{
-      echo "数据查询失败";
+      echo "没有数据";
     }
+    var_dump($res);
   }  
 
   // 删除单条数据
   public function delete(){
     echo "数据库操作演示：<br/>";
     $userModel = new userModel;
-    $res = $userModel->delete(1);
+    $res = $userModel->delete(3);
+
     if( $res ){
       echo "数据删除成功<hr/>";
     }else{
-      echo "数据删除失败";
+      if( $res === false ){
+        echo $userModel->getMsg();
+      }else{
+        echo "数据删除失败";
+      }
+      
     }
   }  
 
